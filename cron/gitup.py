@@ -54,6 +54,9 @@ def print_banner(dir, branch):
 
 
 def git_update(dir, branch):
+    if not dir or not branch:
+        return
+
     print_banner(dir, branch)
 
     with cd(dir):
@@ -66,8 +69,8 @@ def git_update(dir, branch):
 
 def main():
     current_branch = Popen(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], stdout=PIPE).stdout.read().rstrip()
-    git_update("~/workspace/source/", 'master')
     git_update("~/workspace/source/", 'ee/pants_java8')
+    git_update("~/workspace/source/", 'master')
     git_update("~/workspace/source/", current_branch)
 
 
