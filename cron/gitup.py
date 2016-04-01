@@ -68,10 +68,14 @@ def git_update(dir, branch):
 
 
 def main():
-    current_branch = Popen(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], stdout=PIPE).stdout.read().rstrip()
-    git_update("~/workspace/source/", 'ee/pants_java8')
-    git_update("~/workspace/source/", 'master')
-    git_update("~/workspace/source/", current_branch)
+    SRC_DIR = "~/workspace/source/"
+
+    with cd(SRC_DIR):
+        current_branch = Popen(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], stdout=PIPE).stdout.read().rstrip()
+
+    branches_to_update = ('master', current_branch)
+    for branch in branches_to_update:
+        git_update(SRC_DIR, branch)
 
 
 if __name__ == '__main__':
