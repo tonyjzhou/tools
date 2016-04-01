@@ -4,43 +4,14 @@
 # Automatically update repository
 #
 # TODO
-# 1. Extract cd into a library
+# * Extract print_banner
 ##################################
 
-import os
-from os.path import expanduser
 from subprocess import PIPE
 from subprocess import Popen
-from subprocess import call
 
-
-class cd:
-    """Context manager for changing the current working directory"""
-
-    def __init__(self, newPath):
-        self.newPath = expanduser(newPath)
-
-    def __enter__(self):
-        self.savedPath = os.getcwd()
-        os.chdir(self.newPath)
-        print "Entering {} ...\n".format(self.newPath)
-
-    def __exit__(self, etype, value, traceback):
-        os.chdir(self.savedPath)
-        print "Entering {} ...\n".format(self.savedPath)
-
-
-def call_with_message(command, message):
-    print message
-
-    return_code = call(command)
-
-    if (return_code == 0):
-        print message + " done\n"
-    else:
-        print message + " failed\n"
-
-    return return_code == 0
+from system.my_os import Cd
+from system.my_os import call_with_message
 
 
 def print_banner(dir, branch):
@@ -59,18 +30,18 @@ def git_update(dir, branch):
 
     print_banner(dir, branch)
 
-    with cd(dir):
+    with Cd(dir):
         if (call_with_message(["git", "co", branch],
                               "Switching to branch '{}' ...".format(branch)) and call_with_message(["git", "up"],
                                                                                                    "Pulling and rebasing branch '{}' ...".format(
-                                                                                                           branch))):
+                                                                                                       branch))):
             print "git update succeeded!\n"
 
 
 def main():
     SRC_DIR = "~/workspace/source/"
 
-    with cd(SRC_DIR):
+    with Cd(SRC_DIR):
         current_branch = Popen(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], stdout=PIPE).stdout.read().rstrip()
 
     branches_to_update = ('master', current_branch)
