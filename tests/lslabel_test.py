@@ -8,8 +8,9 @@ class TestLslabel(unittest.TestCase):
         pass
 
     def test_read_file(self):
-        content = lslabel.read_file("filename")
-        self.assertEqual('assignedNode' in content)
+        content = lslabel.read_file("/Users/tzhou/workspace/ci-job-configs/.test/output/aurora-admin-7-release")
+        self.assertTrue('assignedNode' in content)
+        self.assertTrue('<project>' in content)
 
     def tearDown(self):
         pass

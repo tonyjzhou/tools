@@ -10,9 +10,15 @@ def lslabel(job):
 
     # Read /Users/tzhou/workspace/ci-job-configs/.test/output/{job}
 
-    # Extract the label in xpath: /project/assignedNode
+    # Extract the label in pattern: <assignedNode>label</assignedNode>
 
     return (job, label)
+
+
+def read_file(file_name):
+    with open(file_name, 'r') as my_file:
+        content = my_file.read()
+    return content
 
 
 def main():
@@ -23,7 +29,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-def read_file(file_name):
-    return None
