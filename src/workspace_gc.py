@@ -37,8 +37,8 @@ def parse_git_count_objects_output(out):
 
 
 def check_gc_required(object_counts):
-    count = int(object_counts['count'])
-    packs = int(object_counts['packs'])
+    count = int(object_counts.get('count', 0))
+    packs = int(object_counts.get('packs', 0))
 
     if count >= 30000 or packs >= 30:
         print "'git gc' is required for workspace", os.getcwd(), ": count =", count, ", packs =", packs
