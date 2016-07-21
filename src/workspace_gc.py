@@ -1,7 +1,10 @@
 #!/usr/bin/python
 import os
 import re
+import shutil
 import subprocess
+
+workspace_dir = "/data/jenkins/workspace"
 
 
 def main():
@@ -11,11 +14,32 @@ def main():
         os.chdir(src_dir)
         out = capture_git_count_objects_output()
         object_counts = parse_git_count_objects_output(out)
-        check_gc_required(object_counts)
+        if check_gc_required(object_counts):
+            clean_workspace(src_dir)
+
+
+def clean_workspace(src_dir):
+    print 'Cleaning', src_dir, "..."
+
+    print 'cd', workspace_dir
+    os.chdir(workspace_dir)
+
+    print 'rmtree', src_dir, "..."
+    shutil.rmtree(src_dir, ignore_errors=True)
+    print 'rmtree', src_dir, "... done"
+
+    print 'git', 'clone', '--single-branch', '-b', 'master', '--verbose', '--reference', '/data/jenkins/git/source.git', 'https://git.twitter.biz/ro/source', src_dir
+    p = subprocess.Popen(
+        ['git', 'clone', '--single-branch', '-b', 'master', '--verbose', '--reference', '/data/jenkins/git/source.git',
+         'https://git.twitter.biz/ro/source', src_dir], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = p.communicate()
+    print out
+
+    print 'Cleaning', src_dir, "... done"
+    return out
 
 
 def find_all_source_dirs():
-    workspace_dir = "/data/jenkins/workspace"
     source_dirs = sorted([os.path.join(workspace_dir, name) for name in os.listdir(workspace_dir) if
                           (name.startswith("source") and os.path.isdir(os.path.join(workspace_dir, name)))])
     # print source_dirs
@@ -42,8 +66,10 @@ def check_gc_required(object_counts):
 
     if count >= 30000 or packs >= 30:
         print "'git gc' is required for workspace", os.getcwd(), ": count =", count, ", packs =", packs
+        return True
     else:
         print "'git gc' is NOT required for workspace", os.getcwd()
+        return False
 
 
 if __name__ == '__main__':
