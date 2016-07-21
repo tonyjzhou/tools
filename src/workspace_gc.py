@@ -5,7 +5,7 @@ import re
 import shutil
 import subprocess
 
-workspace_dir = "/data/jenkins/workspace"
+WORKSPACE_DIR = "/data/jenkins/workspace"
 
 
 def main():
@@ -34,8 +34,8 @@ def parse_arguments():
 def clean_workspace(src_dir):
     print 'Cleaning', src_dir, "..."
 
-    print 'cd', workspace_dir
-    os.chdir(workspace_dir)
+    print 'cd', WORKSPACE_DIR
+    os.chdir(WORKSPACE_DIR)
 
     print 'rmtree', src_dir, "..."
     shutil.rmtree(src_dir, ignore_errors=True)
@@ -53,8 +53,8 @@ def clean_workspace(src_dir):
 
 
 def find_all_source_dirs():
-    source_dirs = sorted([os.path.join(workspace_dir, name) for name in os.listdir(workspace_dir) if
-                          (name.startswith("source") and os.path.isdir(os.path.join(workspace_dir, name)))])
+    source_dirs = sorted([os.path.join(WORKSPACE_DIR, name) for name in os.listdir(WORKSPACE_DIR) if
+                          (name.startswith("source") and os.path.isdir(os.path.join(WORKSPACE_DIR, name)))])
     # print source_dirs
     return source_dirs
 
