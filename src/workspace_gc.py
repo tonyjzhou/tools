@@ -64,7 +64,10 @@ def check_gc_required(object_counts):
     count = int(object_counts.get('count', 0))
     packs = int(object_counts.get('packs', 0))
 
-    if count >= 30000 or packs >= 30:
+    count_threshold = 15000
+    packs_threshold = 15
+
+    if count >= count_threshold or packs >= packs_threshold:
         print "'git gc' is required for workspace", os.getcwd(), ": count =", count, ", packs =", packs
         return True
     else:
