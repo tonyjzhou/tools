@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import argparse
 import os
 import re
 import shutil
@@ -8,14 +9,26 @@ workspace_dir = "/data/jenkins/workspace"
 
 
 def main():
-    source_dirs = find_all_source_dirs()
+    args = parse_arguments()
 
-    for src_dir in source_dirs:
+    for src_dir in find_all_source_dirs():
         os.chdir(src_dir)
         out = capture_git_count_objects_output()
         object_counts = parse_git_count_objects_output(out)
-        if check_gc_required(object_counts):
+        if check_gc_required(object_counts, args.max_count, args.max_packs) and args.clean:
             clean_workspace(src_dir)
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description='%(prog)s shows and cleans workspaces when garbage greater than a threshold.')
+    parser.add_argument('--clean', action='store_true', default=False,
+                        help="if specified, the workspace will be swept if it's marked (default: %(default)s)")
+    parser.add_argument('--max_count', type=int, nargs='?', default=15000,
+                        help='if count is greater than max_count, the workspace will be marked (default: %(default)s)')
+    parser.add_argument('--max_packs', type=int, nargs='?', default=15,
+                        help='if packs is greater than max_packs, the workspace will be marked (default: %(default)s)')
+    return parser.parse_args()
 
 
 def clean_workspace(src_dir):
@@ -60,18 +73,15 @@ def parse_git_count_objects_output(out):
     return object_counts
 
 
-def check_gc_required(object_counts):
+def check_gc_required(object_counts, max_count, max_packs):
     count = int(object_counts.get('count', 0))
     packs = int(object_counts.get('packs', 0))
 
-    count_threshold = 15000
-    packs_threshold = 15
-
-    if count >= count_threshold or packs >= packs_threshold:
+    if count >= max_count or packs >= max_packs:
         print "'git gc' is required for workspace", os.getcwd(), ": count =", count, ", packs =", packs
         return True
     else:
-        print "'git gc' is NOT required for workspace", os.getcwd()
+        print "'git gc' is NOT required for workspace", os.getcwd(), ": count =", count, ", packs =", packs
         return False
 
 
