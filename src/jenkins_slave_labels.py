@@ -8,7 +8,7 @@ SERVICE_URL = 'https://jinkins-api.twitter.biz/api/1.0/slaves/{}/labels'
 
 
 def main():
-    hosts = [line.rstrip('\n') for line in open('workspace_gc.out')]
+    hosts = [line.rstrip('\n') for line in open('slaves.out')]
     for host in hosts:
         if len(host) < 1: continue
         print "|{}|{}|".format(host, find_labels(host))

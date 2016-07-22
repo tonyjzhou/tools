@@ -9,14 +9,22 @@ WORKSPACE_DIR = "/data/jenkins/workspace"
 
 
 def main():
-    args = parse_arguments()
+    parser = parse_arguments()
+    args = parser.parse_args()
+
+    workspace_to_clean = []
 
     for src_dir in find_all_source_dirs():
         os.chdir(src_dir)
         out = capture_git_count_objects_output()
         object_counts = parse_git_count_objects_output(out)
-        if check_gc_required(object_counts, args.max_count, args.max_packs) and args.clean:
-            clean_workspace(src_dir)
+        if check_gc_required(object_counts, args.max_count, args.max_packs):
+            workspace_to_clean.append(src_dir)
+            if args.clean:
+                clean_workspace(src_dir)
+
+    if (not args.clean) and workspace_to_clean:
+        print "Please turn on the '--clean' flag to clean the dirty workspaces", workspace_to_clean
 
 
 def parse_arguments():
@@ -28,7 +36,7 @@ def parse_arguments():
                         help='if count is greater than max_count, the workspace will be marked (default: %(default)s)')
     parser.add_argument('--max_packs', type=int, nargs='?', default=15,
                         help='if packs is greater than max_packs, the workspace will be marked (default: %(default)s)')
-    return parser.parse_args()
+    return parser
 
 
 def clean_workspace(src_dir):
