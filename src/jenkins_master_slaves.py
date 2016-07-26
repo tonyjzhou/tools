@@ -13,7 +13,8 @@ def main():
     hosts = [line.rstrip('\n') for line in open(args.masters_file)]
     for host in hosts:
         if len(host) < 1: continue
-        print "|{}|{}|".format(host, find_labels(host))
+        print host
+        print "\n".join(find_slaves(host)), "\n"
 
 
 def parse_arguments():
@@ -24,7 +25,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def find_labels(host):
+def find_slaves(host):
     url = SERVICE_URL.format(host)
     uh = urllib.urlopen(url)
     data = uh.read()
