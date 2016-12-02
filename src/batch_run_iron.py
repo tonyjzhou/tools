@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 ##################################
 # Automatically update repository
@@ -56,6 +56,6 @@ targets = [
 
 targets_string = ' '.join(targets)
 
-print "Running {} on IRON with {} parallel jobs ...".format(targets_string, len(targets))
+print("Running {} on IRON with {} parallel jobs ...".format(targets_string, len(targets)))
 os.chdir(expanduser("~/workspace/source"))
 call(["/Users/tzhou/workspace/source/devprod/iron/scripts/user/iron-tryout.sh", targets_string, str(len(targets))])

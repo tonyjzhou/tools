@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 import argparse
 
 parser = argparse.ArgumentParser(
@@ -11,6 +11,6 @@ parser.add_argument('--max_packs', type=int, nargs='?', default=15,
                     help='if packs is greater than max_packs, the workspace will be marked (default: %(default)s)')
 
 args = parser.parse_args()
-print "clean =", args.clean
-print "max_count =", args.max_count
-print "max_packs =", args.max_packs
+print("clean =", args.clean)
+print("max_count =", args.max_count)
+print("max_packs =", args.max_packs)

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 import argparse
 import os
 import re
@@ -24,7 +24,7 @@ def main():
                 clean_workspace(src_dir)
 
     if (not args.clean) and workspace_to_clean:
-        print "Please turn on the '--clean' flag to clean the dirty workspaces", workspace_to_clean
+        print("Please turn on the '--clean' flag to clean the dirty workspaces", workspace_to_clean)
 
 
 def parse_arguments():
@@ -40,23 +40,24 @@ def parse_arguments():
 
 
 def clean_workspace(src_dir):
-    print 'Cleaning', src_dir, "..."
+    print('Cleaning', src_dir, "...")
 
-    print 'cd', WORKSPACE_DIR
+    print('cd', WORKSPACE_DIR)
     os.chdir(WORKSPACE_DIR)
 
-    print 'rmtree', src_dir, "..."
+    print('rmtree', src_dir, "...")
     shutil.rmtree(src_dir, ignore_errors=True)
-    print 'rmtree', src_dir, "... done"
+    print('rmtree', src_dir, "... done")
 
-    print 'git', 'clone', '--single-branch', '-b', 'master', '--verbose', '--reference', '/data/jenkins/git/source.git', 'https://git.twitter.biz/ro/source', src_dir
+    print('git', 'clone', '--single-branch', '-b', 'master', '--verbose', '--reference', '/data/jenkins/git/source.git',
+          'https://git.twitter.biz/ro/source', src_dir)
     p = subprocess.Popen(
         ['git', 'clone', '--single-branch', '-b', 'master', '--verbose', '--reference', '/data/jenkins/git/source.git',
          'https://git.twitter.biz/ro/source', src_dir], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
-    print out
+    print(out)
 
-    print 'Cleaning', src_dir, "... done"
+    print('Cleaning', src_dir, "... done")
     return out
 
 
@@ -86,10 +87,10 @@ def check_gc_required(object_counts, max_count, max_packs):
     packs = int(object_counts.get('packs', 0))
 
     if count >= max_count or packs >= max_packs:
-        print "'git gc' is required for workspace", os.getcwd(), ": count =", count, ", packs =", packs
+        print("'git gc' is required for workspace", os.getcwd(), ": count =", count, ", packs =", packs)
         return True
     else:
-        print "'git gc' is NOT required for workspace", os.getcwd(), ": count =", count, ", packs =", packs
+        print("'git gc' is NOT required for workspace", os.getcwd(), ": count =", count, ", packs =", packs)
         return False
 
 

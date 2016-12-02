@@ -1,11 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from subprocess import call
 
 
 def multi_revert_git(files_to_revert, target_commit):
     for my_file in files_to_revert:
-        print "Reverting {} to commit {} ...".format(my_file, target_commit)
+        print("Reverting {} to commit {} ...".format(my_file, target_commit))
         call(["git", "co", target_commit, my_file])
 
 

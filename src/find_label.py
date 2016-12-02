@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 ###############################################################
 # Given a list of job names; produce a table of jobs -> labels
 ###############################################################
@@ -35,7 +35,7 @@ def find_label(job):
 def main():
     jobs = sys.argv[1:]
     for job in jobs:
-        print find_label(job)
+        print(find_label(job))
 
 
 if __name__ == '__main__':

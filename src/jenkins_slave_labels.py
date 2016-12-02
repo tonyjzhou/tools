@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import argparse
 import json
@@ -13,7 +13,7 @@ def main():
     hosts = [line.rstrip('\n') for line in open(args.slave_file)]
     for host in hosts:
         if len(host) < 1: continue
-        print "|{}|{}|".format(host, find_labels(host))
+        print("|{}|{}|".format(host, find_labels(host)))
 
 
 def parse_arguments():

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from multiprocessing import Pool
 from subprocess import check_output

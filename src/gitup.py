@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 ##################################
 # Automatically update repository
@@ -18,9 +18,9 @@ def print_banner(dir, branch):
     message = "git update {} for '{}'".format(dir, branch)
     header = "-" * len(message)
 
-    print header
-    print message
-    print header
+    print(header)
+    print(message)
+    print(header)
     print
 
 
@@ -35,7 +35,7 @@ def git_update(dir, branch):
                               "Switching to branch '{}' ...".format(branch)) and call_with_message(["git", "up"],
                                                                                                    "Pulling and rebasing branch '{}' ...".format(
                                                                                                        branch))):
-            print "git update succeeded!\n"
+            print("git update succeeded!\n")
 
 
 def main():
